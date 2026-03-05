@@ -1,194 +1,145 @@
-<!doctype html>
-<html lang="de">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Email-Aktion – Bundestag</title>
-  <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:860px;margin:40px auto;padding:0 16px;line-height:1.55}
-    h1{margin:0 0 10px}
-    .card{border:1px solid #111;border-radius:16px;padding:18px 16px;margin:14px 0}
-    .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-    label{font-weight:700}
-    input[type="number"]{width:120px;padding:10px 12px;border-radius:12px;border:1px solid #111;font-size:16px}
-    button,a.btn{
-      display:inline-block;padding:14px 18px;border-radius:12px;border:1px solid #111;
-      background:#111;color:#fff;text-decoration:none;font-weight:800;cursor:pointer
-    }
-    button.secondary{background:#fff;color:#111}
-    button:disabled{opacity:.5;cursor:not-allowed}
-    .small{opacity:.8;font-size:.95rem}
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;word-break:break-word}
-    .warn{background:#fff8e1;border:1px solid #e6d38a}
-    details summary{cursor:pointer;font-weight:800}
-    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-    .chip{border:1px solid #111;border-radius:999px;padding:6px 10px;background:#fff;cursor:pointer;font-weight:700}
-  </style>
-</head>
-<body>
-
-  <h1>📧 Email-Aktion an den Bundestag</h1>
-  <p class="small">
-    Ein Klick öffnet deine Mail-App mit einer vorbereiteten Nachricht.
-    Die Empfänger werden automatisch aus <span class="mono">emails.txt</span> geladen und in Chunks aufgeteilt.
-  </p>
-
-  <div class="card">
-    <div class="row" style="justify-content:space-between">
-      <div class="row">
-        <label for="chunkSize">Chunk-Größe:</label>
-        <input id="chunkSize" type="number" min="1" step="1" value="60" />
-        <div class="chips" aria-label="Schnellauswahl Chunk-Größe">
-        </div>
-      </div>
-
-      <div class="row">
-        <button id="sendBtn" disabled>✅ Send (open draft)</button>
-        <button id="nextBtn" class="secondary" disabled>➡️ Next chunk</button>
-      </div>
-    </div>
-
-    <p class="small" style="margin-top:12px">
-      Status: <span id="status">Lade emails.txt …</span>
-    </p>
-
-    <div class="card warn" style="margin-top:14px">
-      <b>Hinweis (wichtig):</b>
-      <span class="small">
-        In-App-Browser (Instagram/X/Telegram) blockieren oft <span class="mono">mailto:</span>.
-        Wenn es nicht klappt: Link im normalen Browser öffnen (Safari/Chrome) oder „In Browser öffnen“ wählen.
-      </span>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2 style="margin-top:0">Worum geht es?</h2>
-
-    <h3 style="margin-bottom:6px">Deutsch</h3>
-    <p style="margin-top:0">
-      Diese Aktion erstellt eine E-Mail an Mitglieder des Deutschen Bundestags. Die Nachricht bittet darum,
-      die Unterstützung für das iranische Volk in seinem Streben nach Freiheit, Demokratie und Rechtsstaatlichkeit
-      konsequent fortzusetzen, die territoriale Integrität Irans zu respektieren und größtmöglichen Schutz für
-      Zivilistinnen und Zivilisten sicherzustellen. Betont wird außerdem, dass die zukünftige Ordnung auf dem Willen
-      des iranischen Volkes beruhen muss.
-    </p>
-
-    <h3 style="margin-bottom:6px">English</h3>
-    <p style="margin-top:0">
-      This action opens a pre-written email addressed to members of the German Bundestag. The message asks them to
-      continue supporting the Iranian people’s pursuit of freedom, democracy, and the rule of law, to respect Iran’s
-      territorial integrity, and to take maximum precautions to avoid harm to civilians. It emphasizes that any future
-      political order must be based on the will of the Iranian people.
-    </p>
-
-    <details style="margin-top:12px">
-      <summary>Show subject & body (for transparency)</summary>
-      <p class="small"><b>Subject:</b> <span class="mono" id="previewSubject"></span></p>
-      <pre class="mono" id="previewBody" style="white-space:pre-wrap"></pre>
-    </details>
-  </div>
-
-  <div class="card">
-    <details open>
-      <summary>Manual chunk buttons (if “Next” is blocked)</summary>
-      <div id="manualButtons" class="row" style="margin-top:12px"></div>
-      <p class="small" style="margin-top:10px">
-        If your phone blocks the Next button flow, use these to open each chunk manually.
-      </p>
-    </details>
-  </div>
-
 <script>
+let SUBJECT = "";
+let BODY = "";
 
-let SUBJECT="";
-let BODY="";
+let emails = [];
+let chunks = [];
+let current = 0;
 
-let emails=[];
-let chunks=[];
-let current=0;
+const statusEl = document.getElementById("status");
+const sendBtn = document.getElementById("sendBtn");
+const nextBtn = document.getElementById("nextBtn");
+const chunkSizeEl = document.getElementById("chunkSize");
+const manualEl = document.getElementById("manualButtons");
 
-const statusEl=document.getElementById("status");
-const sendBtn=document.getElementById("sendBtn");
-const nextBtn=document.getElementById("nextBtn");
-const chunkSizeEl=document.getElementById("chunkSize");
+const previewSubjectEl = document.getElementById("previewSubject");
+const previewBodyEl = document.getElementById("previewBody");
 
-function normalizeEmails(lines){
-  return lines.map(e=>e.trim()).filter(e=>e.length>0);
+function normalizeEmails(text) {
+  return text
+    .split(/\r?\n/)
+    .map(l => l.trim())
+    .filter(Boolean)
+    .filter(l => !l.startsWith("#")); // allow comments
 }
 
-function chunkArray(arr,size){
-  const out=[];
-  for(let i=0;i<arr.length;i+=size){
-    out.push(arr.slice(i,i+size));
-  }
+function chunkArray(arr, size) {
+  const out = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
   return out;
 }
 
-function buildMailto(bccList){
-  const bcc=encodeURIComponent(bccList.join(","));
-  const subject=encodeURIComponent(SUBJECT);
-  const body=encodeURIComponent(BODY);
+function buildMailto(bccList) {
+  // BCC-only mailto
+  const bcc = encodeURIComponent(bccList.join(","));
+  const subject = encodeURIComponent(SUBJECT || "");
+  const body = encodeURIComponent(BODY || "");
   return `mailto:?bcc=${bcc}&subject=${subject}&body=${body}`;
 }
 
-function updateUI(){
-
-  const size=parseInt(chunkSizeEl.value||60);
-
-  chunks=chunkArray(emails,size);
-
-  sendBtn.disabled=false;
-
-  statusEl.textContent=
-  `Loaded ${emails.length} emails • ${chunks.length} chunks`;
-
+function renderPreview() {
+  if (previewSubjectEl) previewSubjectEl.textContent = SUBJECT || "(empty)";
+  if (previewBodyEl) previewBodyEl.textContent = BODY || "(empty)";
 }
 
-function openCurrent(){
-  if(!chunks.length) return;
-  window.location.href=buildMailto(chunks[current]);
+function renderManualButtons() {
+  manualEl.innerHTML = "";
+  chunks.forEach((chunk, idx) => {
+    const a = document.createElement("a");
+    a.className = "btn";
+    a.href = buildMailto(chunk);
+    a.textContent = `Open chunk ${idx + 1}`;
+    a.style.marginRight = "8px";
+    a.style.marginTop = "8px";
+    manualEl.appendChild(a);
+  });
 }
 
-sendBtn.onclick=openCurrent;
+function rebuildChunksAndUI() {
+  const size = Math.max(1, parseInt(chunkSizeEl.value || "60", 10));
+  chunks = chunkArray(emails, size);
 
-nextBtn.onclick=function(){
-  if(current<chunks.length-1){
-    current++;
-    openCurrent();
+  // keep current in range
+  if (chunks.length === 0) current = 0;
+  else current = Math.min(current, chunks.length - 1);
+
+  // enable/disable buttons
+  const ready = (emails.length > 0 && (SUBJECT.length > 0 || BODY.length > 0));
+  sendBtn.disabled = !ready || chunks.length === 0;
+  nextBtn.disabled = !ready || chunks.length === 0 || current >= chunks.length - 1;
+
+  if (chunks.length === 0) {
+    statusEl.textContent = "No recipients loaded. Check emails.txt.";
+    manualEl.innerHTML = "";
+    return;
   }
+
+  statusEl.textContent =
+    `Loaded ${emails.length} emails • Chunk size ${size} • Chunk ${current + 1}/${chunks.length} (${chunks[current].length} recipients)`;
+
+  renderManualButtons();
 }
 
-async function loadEmails(){
-  const res=await fetch("emails.txt");
-  const txt=await res.text();
-  emails=normalizeEmails(txt.split("\n"));
+function openCurrentChunk() {
+  if (!chunks.length) return;
+  window.location.href = buildMailto(chunks[current]);
+  // update next button status after opening
+  rebuildChunksAndUI();
 }
 
-async function loadMessage(){
+sendBtn.addEventListener("click", openCurrentChunk);
 
-  const res=await fetch("message.txt");
-  const txt=await res.text();
+nextBtn.addEventListener("click", () => {
+  if (current < chunks.length - 1) {
+    current++;
+    openCurrentChunk();
+  }
+});
 
-  const subjectMatch=txt.match(/SUBJECT:(.*)/);
-  const bodyMatch=txt.split("BODY:")[1];
+// rebuild when chunk size changes
+chunkSizeEl.addEventListener("change", () => {
+  current = 0;
+  rebuildChunksAndUI();
+});
 
-  SUBJECT=subjectMatch?subjectMatch[1].trim():"";
-  BODY=bodyMatch?bodyMatch.trim():"";
-
+async function loadEmails() {
+  const res = await fetch("emails.txt", { cache: "no-store" });
+  if (!res.ok) throw new Error("emails.txt not found or not accessible");
+  const txt = await res.text();
+  emails = normalizeEmails(txt);
 }
 
-async function init(){
+async function loadMessage() {
+  const res = await fetch("message.txt", { cache: "no-store" });
+  if (!res.ok) throw new Error("message.txt not found or not accessible");
+  const txt = await res.text();
 
-  await loadEmails();
-  await loadMessage();
+  // Expected format:
+  // SUBJECT: ...
+  // (blank line optional)
+  // BODY:
+  // ...
+  const subjectLine = txt.match(/^SUBJECT:\s*(.*)$/m);
+  const bodySplit = txt.split(/^\s*BODY:\s*$/m);
 
-  updateUI();
+  SUBJECT = subjectLine ? subjectLine[1].trim() : "";
 
+  // everything after BODY: is body
+  BODY = bodySplit.length > 1 ? bodySplit.slice(1).join("\n").trim() : "";
+
+  renderPreview();
 }
 
-init();
-
+(async function init() {
+  try {
+    statusEl.textContent = "Loading emails.txt and message.txt …";
+    await Promise.all([loadEmails(), loadMessage()]);
+    rebuildChunksAndUI();
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = `Error: ${err.message}`;
+    sendBtn.disabled = true;
+    nextBtn.disabled = true;
+  }
+})();
 </script>
-
-</body>
-</html>
