@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de">
+<html lang="fa" dir="rtl">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -18,7 +18,7 @@
     button.secondary{background:#fff;color:#111}
     button:disabled{opacity:.5;cursor:not-allowed}
     .small{opacity:.8;font-size:.95rem}
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;word-break:break-word}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;word-break:break-word;unicode-bidi:plaintext}
     .warn{background:#fff8e1;border:1px solid #e6d38a}
     details summary{cursor:pointer;font-weight:800}
     .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
@@ -27,47 +27,62 @@
 </head>
 <body>
 
-  <!-- Language toggle (added) -->
-  <div class="row" style="justify-content:flex-end;margin-bottom:10px">
+  <!-- Language toggle (default FA, cycle FA -> EN -> DE) -->
+  <div class="row" style="justify-content:flex-start;margin-bottom:10px">
     <button id="langBtn" class="secondary" type="button">🌐 EN</button>
   </div>
 
-  <!-- Added IDs so language switch can translate -->
-  <h1 id="title">📧 Email-Aktion an den Bundestag</h1>
+  <h1 id="title">📧 کمپین ایمیل به بوندستاگ</h1>
   <p class="small" id="intro">
-    Ein Klick öffnet deine Mail-App mit einer vorbereiteten Nachricht.
-    Die Empfänger werden automatisch aus <span class="mono">emails.txt</span> geladen und in Chunks aufgeteilt.
+    با یک کلیک، اپ ایمیل شما با متن آماده باز می‌شود.
+    گیرندگان به‌صورت خودکار از <span class="mono">emails.txt</span> خوانده می‌شوند و به چند بخش (Chunk) تقسیم می‌شوند.
   </p>
 
   <div class="card">
     <div class="row" style="justify-content:space-between">
       <div class="row">
-        <label id="chunkLabel" for="chunkSize">Chunk-Größe:</label>
+        <label id="chunkLabel" for="chunkSize">اندازه چانک:</label>
         <input id="chunkSize" type="number" min="1" step="1" value="60" />
         <div class="chips" aria-label="Schnellauswahl Chunk-Größe"></div>
       </div>
 
       <div class="row">
-        <button id="sendBtn" disabled>✅ Send (open draft)</button>
-        <button id="nextBtn" class="secondary" disabled>➡️ Next chunk</button>
+        <button id="sendBtn" disabled>✅ ارسال (باز کردن پیش‌نویس)</button>
+        <button id="nextBtn" class="secondary" disabled>➡️ چانک بعدی</button>
       </div>
     </div>
 
     <p class="small" style="margin-top:12px">
-      <span id="statusLabel">Status:</span> <span id="status">Lade emails.txt …</span>
+      <span id="statusLabel">وضعیت:</span> <span id="status">در حال بارگذاری emails.txt …</span>
     </p>
 
     <div class="card warn" style="margin-top:14px">
-      <b id="warnTitle">Hinweis (wichtig):</b>
+      <b id="warnTitle">نکته مهم:</b>
       <span class="small" id="warnText">
-        In-App-Browser (Instagram/X/Telegram) blockieren oft <span class="mono">mailto:</span>.
-        Wenn es nicht klappt: Link im normalen Browser öffnen (Safari/Chrome) oder „In Browser öffnen“ wählen.
+        مرورگرهای داخل اپ‌ها (Instagram/X/Telegram) اغلب <span class="mono">mailto:</span> را بلاک می‌کنند.
+        اگر کار نکرد: لینک را در مرورگر اصلی (Safari/Chrome) باز کنید یا گزینه «Open in browser» را بزنید.
       </span>
     </div>
   </div>
 
   <div class="card">
-    <h2 id="aboutTitle" style="margin-top:0">Worum geht es?</h2>
+    <h2 id="aboutTitle" style="margin-top:0">این صفحه درباره چیست؟</h2>
+
+    <h3 id="aboutFaTitle" style="margin-bottom:6px">فارسی</h3>
+    <p id="aboutFa" style="margin-top:0">
+      این ابزار یک ایمیل آماده را برای ارسال به نمایندگان (یا نهادهای هدف) باز می‌کند. متن ایمیل درخواست می‌کند که
+      حمایت از مردم ایران در مسیر آزادی، دموکراسی و حاکمیت قانون ادامه یابد، به تمامیت ارضی ایران احترام گذاشته شود
+      و حداکثر احتیاط برای جلوگیری از آسیب به غیرنظامیان رعایت گردد. همچنین تأکید می‌شود که هر نظم سیاسی آینده باید
+      بر پایه اراده مردم ایران شکل بگیرد.
+    </p>
+
+    <h3 id="aboutEnTitle" style="margin-bottom:6px">English</h3>
+    <p id="aboutEn" style="margin-top:0">
+      This tool opens a pre-written email for sending to a list of recipients (e.g., members of parliament). The message asks them to
+      continue supporting the Iranian people’s pursuit of freedom, democracy, and the rule of law, to respect Iran’s territorial integrity,
+      and to take maximum precautions to avoid harm to civilians. It emphasizes that any future political order must be based on the will of
+      the Iranian people.
+    </p>
 
     <h3 id="aboutDeTitle" style="margin-bottom:6px">Deutsch</h3>
     <p id="aboutDe" style="margin-top:0">
@@ -78,118 +93,162 @@
       des iranischen Volkes beruhen muss.
     </p>
 
-    <h3 id="aboutEnTitle" style="margin-bottom:6px">English</h3>
-    <p id="aboutEn" style="margin-top:0">
-      This action opens a pre-written email addressed to members of the German Bundestag. The message asks them to
-      continue supporting the Iranian people’s pursuit of freedom, democracy, and the rule of law, to respect Iran’s
-      territorial integrity, and to take maximum precautions to avoid harm to civilians. It emphasizes that any future
-      political order must be based on the will of the Iranian people.
-    </p>
-
     <details style="margin-top:12px">
-      <summary id="previewSummary">Show subject & body (for transparency)</summary>
-      <p class="small"><b id="previewSubjectLabel">Subject:</b> <span class="mono" id="previewSubject"></span></p>
+      <summary id="previewSummary">نمایش موضوع و متن ایمیل (شفافیت)</summary>
+      <p class="small"><b id="previewSubjectLabel">موضوع:</b> <span class="mono" id="previewSubject"></span></p>
       <pre class="mono" id="previewBody" style="white-space:pre-wrap"></pre>
     </details>
   </div>
 
+  <div class="card">
+    <h2 id="reuseTitle">استفاده مجدد در کشور شما</h2>
 
+    <h3 id="reuseFaTitle">فارسی</h3>
+    <p id="reuseFaP1">
+      این ابزار متن‌باز است و می‌تواند در کشورهای دیگر هم برای ارتباط با نمایندگان منتخب استفاده شود.
+      برای استفاده در کشور خودتان کافی است ریپازیتوری GitHub را دانلود یا فورک کنید و دو فایل زیر را تغییر دهید:
+    </p>
+    <ol id="reuseFaList">
+      <li>فایل <span class="mono">emails.txt</span> را با ایمیل‌های پارلمان/نمایندگان کشور خود جایگزین کنید (هر ایمیل در یک خط).</li>
+      <li>فایل <span class="mono">message.txt</span> را ویرایش کنید و موضوع و متن ایمیل را تغییر دهید (فرمت باید ثابت بماند).</li>
+      <li>سپس ریپازیتوری را در پروفایل خود منتشر کنید و لینک صفحه را با جامعه/دوستانتان به اشتراک بگذارید.</li>
+    </ol>
 
-<div class="card">
-  <h2>Reuse this tool in your country</h2>
+    <pre class="mono" id="reuseFormat">
+SUBJECT: موضوع اینجا
 
-  <h3>English</h3>
-  <p>
-    This tool is open and can be reused by communities in other countries who want
-    to contact their own elected representatives in a similar way.
-  </p>
+BODY:
+متن پیام اینجا
+    </pre>
 
-  <p>
-    To use this method in your country, you only need to:
-  </p>
+    <h3 id="reuseEnTitle">English</h3>
+    <p id="reuseEnP1">
+      This tool is open and can be reused by communities in other countries who want to contact their elected representatives.
+      To adapt it, download or fork the GitHub repository and change:
+    </p>
+    <ol id="reuseEnList">
+      <li>Replace <span class="mono">emails.txt</span> with your parliament/representatives’ emails (one email per line).</li>
+      <li>Edit <span class="mono">message.txt</span> and update the subject and body, keeping the same format.</li>
+      <li>Publish the repository on your GitHub profile and share the page link with your community.</li>
+    </ol>
 
-  <ol>
-    <li>Download or fork the GitHub repository.</li>
-    <li>Replace the file <span class="mono">emails.txt</span> with the email addresses of your parliament members (one email per line).</li>
-    <li>Edit <span class="mono">message.txt</span> and change the subject and body of the email. Keep the format:</li>
-  </ol>
-
-  <pre class="mono">
+    <pre class="mono" id="reuseFormatEn">
 SUBJECT: Your subject here
 
 BODY:
 Your email message text here
-  </pre>
+    </pre>
 
-  <p>
-    The script will automatically load these files and generate email drafts for all recipients.
-  </p>
+    <h3 id="reuseDeTitle">Deutsch</h3>
+    <p id="reuseDeP1">
+      Dieses Tool ist offen und kann auch von Communities in anderen Ländern verwendet werden, um ihre eigenen gewählten Vertreter zu kontaktieren.
+      Dafür einfach das GitHub-Repository herunterladen oder forken und folgende Dateien anpassen:
+    </p>
+    <ol id="reuseDeList">
+      <li><span class="mono">emails.txt</span> durch die E-Mail-Adressen des eigenen Parlaments ersetzen (eine Adresse pro Zeile).</li>
+      <li><span class="mono">message.txt</span> bearbeiten und Betreff sowie Text ändern (Format beibehalten).</li>
+      <li>Repository im eigenen GitHub-Profil veröffentlichen und den Link mit der Community teilen.</li>
+    </ol>
 
-  <p>
-    After editing the files, you can publish the repository on your own GitHub profile and share the link with your community.
-    Anyone opening the page can then send the prepared email using their own email application.
-  </p>
-
-  <h3>Deutsch</h3>
-
-  <p>
-    Dieses Tool ist offen und kann auch von Communities in anderen Ländern verwendet werden,
-    um ihre eigenen gewählten Vertreter auf ähnliche Weise zu kontaktieren.
-  </p>
-
-  <p>
-    Um diese Methode im eigenen Land zu verwenden, sind nur wenige Schritte notwendig:
-  </p>
-
-  <ol>
-    <li>Das GitHub-Repository herunterladen oder forken.</li>
-    <li>Die Datei <span class="mono">emails.txt</span> durch eine Liste der E-Mail-Adressen des eigenen Parlaments ersetzen (eine Adresse pro Zeile).</li>
-    <li>Die Datei <span class="mono">message.txt</span> anpassen und Betreff sowie Nachrichtentext ändern. Das Format muss so bleiben:</li>
-  </ol>
-
-  <pre class="mono">
+    <pre class="mono" id="reuseFormatDe">
 SUBJECT: Betreff hier
 
 BODY:
 Text der Nachricht hier
-  </pre>
+    </pre>
+  </div>
 
-  <p>
-    Das Skript lädt diese Dateien automatisch und erstellt vorbereitete E-Mails für alle Empfänger.
-  </p>
-
-  <p>
-    Anschließend kann das Repository auf dem eigenen GitHub-Profil veröffentlicht und mit der eigenen Community geteilt werden.
-    Jeder, der die Seite öffnet, kann dann mit einem Klick eine vorbereitete E-Mail über seine eigene Mail-App senden.
-  </p>
-</div>
-
-
-
-
-
-
-  
   <div class="card">
     <details open>
-      <summary id="manualSummary">Manual chunk buttons (if “Next” is blocked)</summary>
+      <summary id="manualSummary">دکمه‌های دستی چانک‌ها (اگر «بعدی» کار نکرد)</summary>
       <div id="manualButtons" class="row" style="margin-top:12px"></div>
       <p class="small" id="manualHelp" style="margin-top:10px">
-        If your phone blocks the Next button flow, use these to open each chunk manually.
+        اگر موبایل شما جریان دکمه «بعدی» را بلاک می‌کند، از این دکمه‌ها برای باز کردن هر چانک استفاده کنید.
       </p>
     </details>
   </div>
 
 <script>
 /* =========================
-   Language system (added)
+   Language system (FA default)
    ========================= */
-let LANG = "de";
+let LANG = "fa"; // default Persian
 
 const UI_TEXT = {
-  de: {
-    pageTitle: "Email-Aktion – Bundestag",
+  fa: {
+    dir: "rtl",
+    pageTitle: "کمپین ایمیل",
     langBtn: "🌐 EN",
+    title: "📧 کمپین ایمیل",
+    intro: `با یک کلیک، اپ ایمیل شما با متن آماده باز می‌شود.
+گیرندگان به‌صورت خودکار از emails.txt خوانده می‌شوند و به چند چانک تقسیم می‌شوند.`,
+    chunkLabel: "اندازه چانک:",
+    sendBtn: "✅ ارسال (باز کردن پیش‌نویس)",
+    nextBtn: "➡️ چانک بعدی",
+    statusLabel: "وضعیت:",
+    warnTitle: "نکته مهم:",
+    warnText: `مرورگرهای داخل اپ‌ها (Instagram/X/Telegram) اغلب mailto: را بلاک می‌کنند.
+اگر کار نکرد: لینک را در مرورگر اصلی (Safari/Chrome) باز کنید یا گزینه «Open in browser» را بزنید.`,
+    aboutTitle: "این صفحه درباره چیست؟",
+    aboutFaTitle: "فارسی",
+    aboutEnTitle: "English",
+    aboutDeTitle: "Deutsch",
+    previewSummary: "نمایش موضوع و متن ایمیل (شفافیت)",
+    previewSubjectLabel: "موضوع:",
+    manualSummary: "دکمه‌های دستی چانک‌ها (اگر «بعدی» کار نکرد)",
+    manualHelp: "اگر موبایل شما جریان دکمه «بعدی» را بلاک می‌کند، از این دکمه‌ها برای باز کردن هر چانک استفاده کنید.",
+    reuseTitle: "استفاده مجدد در کشور شما",
+    reuseFaTitle: "فارسی",
+    reuseEnTitle: "English",
+    reuseDeTitle: "Deutsch",
+    loading: "در حال بارگذاری emails.txt و message.txt …",
+    loadedFmt: (count, size, idx, total, nrec) =>
+      `بارگذاری شد: ${count} ایمیل • اندازه چانک ${size} • چانک ${idx}/${total} (${nrec} گیرنده)`,
+    noRecipients: "هیچ گیرنده‌ای بارگذاری نشد. فایل emails.txt را بررسی کنید.",
+    empty: "(خالی)",
+    openChunk: (i) => `باز کردن چانک ${i}`,
+    errorPrefix: "خطا: "
+  },
+
+  en: {
+    dir: "ltr",
+    pageTitle: "Email Campaign",
+    langBtn: "🌐 DE",
+    title: "📧 Email Campaign",
+    intro: `One click opens your email app with a prepared message.
+Recipients are loaded automatically from emails.txt and split into chunks.`,
+    chunkLabel: "Chunk size:",
+    sendBtn: "✅ Send (open draft)",
+    nextBtn: "➡️ Next chunk",
+    statusLabel: "Status:",
+    warnTitle: "Note (important):",
+    warnText: `In-app browsers (Instagram/X/Telegram) often block mailto:.
+If it doesn’t work: open the link in Safari/Chrome or choose “Open in browser”.`,
+    aboutTitle: "What is this about?",
+    aboutFaTitle: "Persian",
+    aboutEnTitle: "English",
+    aboutDeTitle: "German",
+    previewSummary: "Show subject & body (for transparency)",
+    previewSubjectLabel: "Subject:",
+    manualSummary: "Manual chunk buttons (if “Next” is blocked)",
+    manualHelp: "If your phone blocks the Next button flow, use these to open each chunk manually.",
+    reuseTitle: "Reuse this tool in your country",
+    reuseFaTitle: "Persian",
+    reuseEnTitle: "English",
+    reuseDeTitle: "German",
+    loading: "Loading emails.txt and message.txt …",
+    loadedFmt: (count, size, idx, total, nrec) =>
+      `Loaded ${count} emails • Chunk size ${size} • Chunk ${idx}/${total} (${nrec} recipients)`,
+    noRecipients: "No recipients loaded. Check emails.txt.",
+    empty: "(empty)",
+    openChunk: (i) => `Open chunk ${i}`,
+    errorPrefix: "Error: "
+  },
+
+  de: {
+    dir: "ltr",
+    pageTitle: "Email-Aktion – Bundestag",
+    langBtn: "🌐 FA",
     title: "📧 Email-Aktion an den Bundestag",
     intro: `Ein Klick öffnet deine Mail-App mit einer vorbereiteten Nachricht.
 Die Empfänger werden automatisch aus emails.txt geladen und in Chunks aufgeteilt.`,
@@ -201,21 +260,17 @@ Die Empfänger werden automatisch aus emails.txt geladen und in Chunks aufgeteil
     warnText: `In-App-Browser (Instagram/X/Telegram) blockieren oft mailto:.
 Wenn es nicht klappt: Link im normalen Browser öffnen (Safari/Chrome) oder „In Browser öffnen“ wählen.`,
     aboutTitle: "Worum geht es?",
-    aboutDeTitle: "Deutsch",
+    aboutFaTitle: "Persisch",
     aboutEnTitle: "Englisch",
-    aboutDe: `Diese Aktion erstellt eine E-Mail an Mitglieder des Deutschen Bundestags. Die Nachricht bittet darum,
-die Unterstützung für das iranische Volk in seinem Streben nach Freiheit, Demokratie und Rechtsstaatlichkeit
-konsequent fortzusetzen, die territoriale Integrität Irans zu respektieren und größtmöglichen Schutz für
-Zivilistinnen und Zivilisten sicherzustellen. Betont wird außerdem, dass die zukünftige Ordnung auf dem Willen
-des iranischen Volkes beruhen muss.`,
-    aboutEn: `This action opens a pre-written email addressed to members of the German Bundestag. The message asks them to
-continue supporting the Iranian people’s pursuit of freedom, democracy, and the rule of law, to respect Iran’s
-territorial integrity, and to take maximum precautions to avoid harm to civilians. It emphasizes that any future
-political order must be based on the will of the Iranian people.`,
+    aboutDeTitle: "Deutsch",
     previewSummary: "Betreff & Text anzeigen (Transparenz)",
     previewSubjectLabel: "Betreff:",
     manualSummary: "Manuelle Chunk-Buttons (falls „Next“ blockiert ist)",
     manualHelp: "Wenn dein Handy den Next-Flow blockiert, nutze diese Buttons, um jeden Chunk manuell zu öffnen.",
+    reuseTitle: "Tool im eigenen Land nutzen",
+    reuseFaTitle: "Persisch",
+    reuseEnTitle: "Englisch",
+    reuseDeTitle: "Deutsch",
     loading: "Lade emails.txt und message.txt …",
     loadedFmt: (count, size, idx, total, nrec) =>
       `Geladen: ${count} Emails • Chunk-Größe ${size} • Chunk ${idx}/${total} (${nrec} Empfänger)`,
@@ -223,52 +278,20 @@ political order must be based on the will of the Iranian people.`,
     empty: "(leer)",
     openChunk: (i) => `Chunk ${i} öffnen`,
     errorPrefix: "Fehler: "
-  },
-
-  en: {
-    pageTitle: "Email Campaign – Bundestag",
-    langBtn: "🌐 DE",
-    title: "📧 Email Campaign to the German Bundestag",
-    intro: `One click opens your email app with a prepared message.
-Recipients are loaded automatically from emails.txt and split into chunks.`,
-    chunkLabel: "Chunk size:",
-    sendBtn: "✅ Send (open draft)",
-    nextBtn: "➡️ Next chunk",
-    statusLabel: "Status:",
-    warnTitle: "Note (important):",
-    warnText: `In-app browsers (Instagram/X/Telegram) often block mailto:.
-If it doesn’t work: open the link in Safari/Chrome or choose “Open in browser”.`,
-    aboutTitle: "What is this about?",
-    aboutDeTitle: "German",
-    aboutEnTitle: "English",
-    aboutDe: `Diese Aktion erstellt eine E-Mail an Mitglieder des Deutschen Bundestags. Die Nachricht bittet darum,
-die Unterstützung für das iranische Volk in seinem Streben nach Freiheit, Demokratie und Rechtsstaatlichkeit
-konsequent fortzusetzen, die territoriale Integrität Irans zu respektieren und größtmöglichen Schutz für
-Zivilistinnen und Zivilisten sicherzustellen. Betont wird außerdem, dass die zukünftige Ordnung auf dem Willen
-des iranischen Volkes beruhen muss.`,
-    aboutEn: `This action opens a pre-written email addressed to members of the German Bundestag. The message asks them to
-continue supporting the Iranian people’s pursuit of freedom, democracy, and the rule of law, to respect Iran’s
-territorial integrity, and to take maximum precautions to avoid harm to civilians. It emphasizes that any future
-political order must be based on the will of the Iranian people.`,
-    previewSummary: "Show subject & body (for transparency)",
-    previewSubjectLabel: "Subject:",
-    manualSummary: "Manual chunk buttons (if “Next” is blocked)",
-    manualHelp: "If your phone blocks the Next button flow, use these to open each chunk manually.",
-    loading: "Loading emails.txt and message.txt …",
-    loadedFmt: (count, size, idx, total, nrec) =>
-      `Loaded ${count} emails • Chunk size ${size} • Chunk ${idx}/${total} (${nrec} recipients)`,
-    noRecipients: "No recipients loaded. Check emails.txt.",
-    empty: "(empty)",
-    openChunk: (i) => `Open chunk ${i}`,
-    errorPrefix: "Error: "
   }
 };
+
+function setDirAndLang(langKey){
+  const t = UI_TEXT[langKey];
+  document.documentElement.lang = langKey;
+  document.documentElement.dir = t.dir;
+}
 
 function applyLanguage() {
   const t = UI_TEXT[LANG];
 
   document.title = t.pageTitle;
-  document.documentElement.lang = LANG;
+  setDirAndLang(LANG);
 
   const setText = (id, value) => {
     const el = document.getElementById(id);
@@ -280,20 +303,16 @@ function applyLanguage() {
   setText("title", t.title);
   setText("intro", t.intro);
   setText("chunkLabel", t.chunkLabel);
-
-  // Keep functionality, just change button labels
   setText("sendBtn", t.sendBtn);
   setText("nextBtn", t.nextBtn);
-
   setText("statusLabel", t.statusLabel);
   setText("warnTitle", t.warnTitle);
   setText("warnText", t.warnText);
 
   setText("aboutTitle", t.aboutTitle);
-  setText("aboutDeTitle", t.aboutDeTitle);
+  setText("aboutFaTitle", t.aboutFaTitle);
   setText("aboutEnTitle", t.aboutEnTitle);
-  setText("aboutDe", t.aboutDe);
-  setText("aboutEn", t.aboutEn);
+  setText("aboutDeTitle", t.aboutDeTitle);
 
   setText("previewSummary", t.previewSummary);
   setText("previewSubjectLabel", t.previewSubjectLabel);
@@ -301,21 +320,28 @@ function applyLanguage() {
   setText("manualSummary", t.manualSummary);
   setText("manualHelp", t.manualHelp);
 
-  // Re-render preview/manual labels that depend on language
+  setText("reuseTitle", t.reuseTitle);
+  setText("reuseFaTitle", t.reuseFaTitle);
+  setText("reuseEnTitle", t.reuseEnTitle);
+  setText("reuseDeTitle", t.reuseDeTitle);
+
+  // Re-render dynamic areas
   renderPreview();
   renderManualButtons();
   rebuildChunksAndUI();
 }
 
+/* Cycle language: FA -> EN -> DE -> FA */
 document.getElementById("langBtn").addEventListener("click", () => {
-  LANG = (LANG === "de") ? "en" : "de";
+  LANG = (LANG === "fa") ? "en" : (LANG === "en") ? "de" : "fa";
+
+  // update the next button label shown on the toggle itself
+  // (each language's langBtn already points to the next)
   applyLanguage();
 });
 
-
 /* =========================
-   Your existing functionality
-   (kept, only small hooks added)
+   Existing functionality (kept)
    ========================= */
 let SUBJECT = "";
 let BODY = "";
@@ -446,8 +472,7 @@ async function loadMessage() {
 
 (async function init() {
   try {
-    // Apply default language first (so loading text matches)
-    applyLanguage();
+    applyLanguage(); // apply default FA first
 
     statusEl.textContent = UI_TEXT[LANG].loading;
     await Promise.all([loadEmails(), loadMessage()]);
