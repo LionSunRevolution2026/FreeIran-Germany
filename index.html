@@ -3,39 +3,136 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bundestag Email-Aktion</title>
+  <title>Email-Aktion – Bundestag</title>
   <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:760px;margin:40px auto;padding:0 16px;line-height:1.5}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-    a.btn{display:block;padding:14px 16px;border-radius:12px;border:1px solid #111;text-decoration:none;font-weight:700}
-    .small{opacity:.75}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:840px;margin:40px auto;padding:0 16px;line-height:1.5}
+    .card{border:1px solid #111;border-radius:16px;padding:18px 16px;margin:14px 0}
+    button,a.btn{display:inline-block;padding:14px 18px;border-radius:12px;border:1px solid #111;background:#111;color:#fff;text-decoration:none;font-weight:800;cursor:pointer}
+    button.secondary{background:#fff;color:#111}
+    .small{opacity:.75;font-size:.95rem}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;word-break:break-word}
   </style>
 </head>
 <body>
-  <h2>📧 Email an Bundestag senden</h2>
-  <p>Wähle einen Teil (Chunk). Jede Taste öffnet deine Mail-App mit vorbereiteter Nachricht.</p>
 
-  <div class="grid">
-    <a class="btn" href="./email-01.html">Teil 1 (1–50)</a>
-    <a class="btn" href="./email-02.html">Teil 2 (51–100)</a>
-    <a class="btn" href="./email-03.html">Teil 3 (101–150)</a>
-    <a class="btn" href="./email-04.html">Teil 4 (151–200)</a>
-    <a class="btn" href="./email-05.html">Teil 5 (201–250)</a>
-    <a class="btn" href="./email-06.html">Teil 6 (251–300)</a>
-    <a class="btn" href="./email-07.html">Teil 7 (301–350)</a>
-    <a class="btn" href="./email-08.html">Teil 8 (351–400)</a>
-    <a class="btn" href="./email-09.html">Teil 9 (401–450)</a>
-    <a class="btn" href="./email-10.html">Teil 10 (451–500)</a>
-    <a class="btn" href="./email-11.html">Teil 11 (501–550)</a>
-    <a class="btn" href="./email-12.html">Teil 12 (551–600)</a>
-    <a class="btn" href="./email-13.html">Teil 13 (601–650)</a>
-    <a class="btn" href="./email-14.html">Teil 14 (651–700)</a>
-    <a class="btn" href="./email-15.html">Teil 15 (701–750)</a>
-    <a class="btn" href="./email-16.html">Teil 16 (751–800)</a>
+  <h1>📧 Email an Bundestag senden</h1>
+  <p>Ein Klick öffnet deine Mail-App mit vorbereiteter Nachricht. Wegen technischer Limits wird die Empfängerliste in mehrere Emails (Chunks) geteilt.</p>
+
+  <div class="card">
+    <h2>Schritt 1: Start</h2>
+    <p>Tippe auf <b>Start</b>. Danach kannst du mit <b>Nächste Email öffnen</b> weitergehen.</p>
+
+    <button id="startBtn">✅ Start</button>
+    <button id="nextBtn" class="secondary" disabled>➡️ Nächste Email öffnen</button>
+
+    <p class="small">
+      Hinweis: Viele In-App-Browser (Instagram/X/Telegram) blockieren mailto. Wenn es nicht klappt: Link in Safari/Chrome öffnen.
+    </p>
+
+    <p class="small">Status: <span id="status">bereit</span></p>
   </div>
 
-  <p class="small">
-    Tipp: Wenn du nur 1–2 Mails senden willst, nimm Teil 1 und Teil 2. Wenn du “alle” senden willst, arbeite dich durch alle Teile.
-  </p>
+  <div class="card">
+    <h2>Optional: Einzelne Chunks manuell öffnen</h2>
+    <p class="small">Falls dein Handy das automatische Weiterklicken nicht mag, nutze diese Buttons:</p>
+    <div id="manualButtons"></div>
+  </div>
+
+<script>
+  // === EDIT THESE TWO TEXTS ONCE ===
+  const SUBJECT = "Freiheit und Demokratie für Iran";
+
+  const BODY = `Sehr geehrte Damen und Herren Abgeordnete,
+sehr geehrte Entscheidungsträger,
+
+als in Deutschland ansässige Bürger iranischer Herkunft wenden wir uns mit einem dringlichen politischen Anliegen an Sie. Angesichts der anhaltenden Bestrebungen des iranischen Volkes nach Freiheit und Rechtsstaatlichkeit fordern wir eine konsequente und unverminderte Unterstützung dieses historischen Transformationsprozesses bis zum vollständigen Sturz der Islamischen Republik.
+
+In diesem Zusammenhang unterstreichen wir die absolute Unantastbarkeit der territorialen Integrität Irans. Jede zukünftige staatliche Ordnung muss zwingend auf dem souveränen Willen des iranischen Volkes basieren und völkerrechtlichen Standards entsprechen.
+
+Um eine stabile Transition zu gewährleisten und ein Machtvakuum zu verhindern, unterstützen wir die Federführung einer Übergangsverwaltung unter Kronprinz Reza Pahlavi. Er wird von weiten Teilen der iranischen Gesellschaft als legitime und einende Schlüsselfigur anerkannt, um das Land in eine freie und demokratische Zukunft zu führen.
+
+Wir appellieren an Sie, im Rahmen Ihres Mandats sicherzustellen, dass die Bundesrepublik Deutschland eine klare geopolitische Haltung einnimmt. Dies schließt den maximalen Schutz der Zivilbevölkerung sowie die konsequente Isolierung des aktuellen Regimes ein.
+
+Freiheit und universelle Menschenrechte sind keine bloßen regionalen Konzepte, sondern bilden das Fundament der westlichen Wertegemeinschaft. Wir erwarten daher von der deutschen Politik ein proaktives Engagement, das der historischen Tragweite dieser Freiheitsbewegung gerecht wird.
+
+Mit vorzüglicher Hochachtung`;
+
+  // === CHUNKS (BCC LISTS) ===
+  // Each entry = one email draft. Keep each chunk ~40–60 recipients.
+  const CHUNKS_BCC = [
+    // Chunk 1 (email-01)
+    "sanae.abdi@bundestag.de,valentin.abel@bundestag.de,knut.abraham@bundestag.de,katja.adler@bundestag.de,stephanie.aeffner@bundestag.de,adis.ahmetovic@bundestag.de,goekay.akbulut@bundestag.de,reem.alabali-radovan@bundestag.de,stephan.albani@bundestag.de,ali.al-dailami@bundestag.de,muhanad.al-halak@bundestag.de,renata.alt@bundestag.de,norbert.altenkamp@bundestag.de,philipp.amthor@bundestag.de,luise.amtsberg@bundestag.de,dagmar.andres@bundestag.de,niels.annen@bundestag.de,johannes.arlt@bundestag.de,christine.aschenberg-dugnus@bundestag.de,andreas.audretsch@bundestag.de,artur.auernhammer@bundestag.de,peter.aumer@bundestag.de,maik.aussendorf@bundestag.de,tobias.bacherle@bundestag.de,carolin.bachmann@bundestag.de,lisa.badum@bundestag.de,heike.baehrens@bundestag.de,dorothee.baer@bundestag.de,karl.baer@bundestag.de,annalena.baerbock@bundestag.de,ulrike.bahr@bundestag.de,daniel.baldy@bundestag.de,felix.banaszak@bundestag.de,nezahat.baradari@bundestag.de,thomas.bareiss@bundestag.de,soeren.bartol@bundestag.de,dietmar.bartsch@bundestag.de,baerbel.bas@bundestag.de,nicole.bauer@bundestag.de,christina.baum@bundestag.de,bernd.baumann@bundestag.de,canan.bayram@bundestag.de,katharina.beck@bundestag.de,roger.beckamp@bundestag.de,holger.becker@bundestag.de,jens.beeck@bundestag.de,lukas.benner@bundestag.de,juergen.berghahn@bundestag.de,andre.berghegger@bundestag.de,bengt.bergt@bundestag.de",
+
+    // Chunk 2 (email-02)
+    "marc.bernhard@bundestag.de,peter.beyer@bundestag.de,marc.biadacz@bundestag.de,steffen.bilger@bundestag.de,matthias-w.birkwald@bundestag.de,jakob.blankenburg@bundestag.de,andreas.bleck@bundestag.de,rene.bochmann@bundestag.de,ingo.bodtke@bundestag.de,peter.boehringer@bundestag.de,friedhelm.boginski@bundestag.de,gereon.bollmann@bundestag.de,simone.borchardt@bundestag.de,michael.brand@bundestag.de,jens.brandenburg@bundestag.de,mario.brandenburg@bundestag.de,dirk.brandes@bundestag.de,reinhard.brandl@bundestag.de,stephan.brandner@bundestag.de,franziska.brantner@bundestag.de,helge.braun@bundestag.de,juergen.braun@bundestag.de,silvia.breher@bundestag.de,sebastian.brehm@bundestag.de,heike.brehmer@bundestag.de,michael.breilmann@bundestag.de,leni.breymaier@bundestag.de,ralph.brinkhaus@bundestag.de,carsten.brodesser@bundestag.de,marlon.broehr@bundestag.de,agnieszka.brugger@bundestag.de,frank.bsirske@bundestag.de,sandra.bubendorfer-licht@bundestag.de,katrin.budde@bundestag.de,marcus.buehl@bundestag.de,yannick.bury@bundestag.de,marco.buschmann@bundestag.de,karlheinz.busen@bundestag.de,petr.bystron@bundestag.de,isabel.cademartori@bundestag.de,lars.castellucci@bundestag.de,anna.christmann@bundestag.de,tino.chrupalla@bundestag.de,gitta.connemann@bundestag.de,juergen.cosse@bundestag.de,joana.cotar@bundestag.de,carl-julius.cronenberg@bundestag.de,gottfried.curio@bundestag.de,mario.czaja@bundestag.de,bjoern.simon@bundestag.de",
+
+    // Chunk 3 (email-03)
+    "sevim.dagdelen@bundestag.de,janosch.dahmen@bundestag.de,bernhard.daldrup@bundestag.de,astrid.damerow@bundestag.de,ekin.deligoez@bundestag.de,hakan.demir@bundestag.de,sandra.detzer@bundestag.de,karamba.diaby@bundestag.de,martin.diedenhofen@bundestag.de,jan.dieren@bundestag.de,thomas.dietz@bundestag.de,esther.dilcher@bundestag.de,sabine.dittmar@bundestag.de,bijan.djir-sarai@bundestag.de,alexander.dobrindt@bundestag.de,felix.doering@bundestag.de,anke.domscheit-berg@bundestag.de,michael.donth@bundestag.de,katharina.droege@bundestag.de,falko.drossmann@bundestag.de,deborah.duering@bundestag.de,christian.duerr@bundestag.de,hansjoerg.durz@bundestag.de,harald.ebner@bundestag.de,axel.echeverria@bundestag.de,leon.eckert@bundestag.de,ralph.edelhaeusser@bundestag.de,thomas.ehrhorn@bundestag.de,sonja.eichwede@bundestag.de,marcel.emmerich@bundestag.de,alexander.engelhard@bundestag.de,heike.engelhardt@bundestag.de,martina.englhardt-kopf@bundestag.de,thomas.erndl@bundestag.de,klaus.ernst@bundestag.de,wiebke.esdar@bundestag.de,saskia.esken@bundestag.de,michael.espendiller@bundestag.de,marcus.faber@bundestag.de,hermann.faerber@bundestag.de,ariane.faescher@bundestag.de,yasmin.fahimi@bundestag.de,robert.farle@bundestag.de,johannes.fechner@bundestag.de,uwe.feiler@bundestag.de,peter.felser@bundestag.de,enak.ferlemann@bundestag.de,susanne.ferschl@bundestag.de,emilia.fester@bundestag.de,sebastian.fiedler@bundestag.de",
+
+    // Chunk 4 (email-04)
+    "daniel.foest@bundestag.de,edgar.franke@bundestag.de,thorsten.frei@bundestag.de,otto.fricke@bundestag.de,dietmar.friedhoff@bundestag.de,hans-peter.friedrich@bundestag.de,michael.frieser@bundestag.de,goetz.froemming@bundestag.de,markus.frohnmaier@bundestag.de,fabian.funke@bundestag.de,maximilian.funke-kaiser@bundestag.de,ingo.gaedechens@bundestag.de,schahina.gambir@bundestag.de,tessa.ganserer@bundestag.de,martin.gassner-herz@bundestag.de,matthias.gastel@bundestag.de,alexander.gauland@bundestag.de,manuel.gava@bundestag.de,thomas.gebhart@bundestag.de,kai.gehring@bundestag.de,jonas.geissler@bundestag.de,stefan.gelbhaar@bundestag.de,michael.gerdes@bundestag.de,knut.gerschau@bundestag.de,martin.gerster@bundestag.de,jan-niclas.gesenhues@bundestag.de,albrecht.glaser@bundestag.de,angelika.gloeckner@bundestag.de,hannes.gnauck@bundestag.de,katrin.goering-eckardt@bundestag.de,christian.goerke@bundestag.de,nicole.gohlke@bundestag.de,kay.gottschalk@bundestag.de,inge.graessle@bundestag.de,fabian.gramling@bundestag.de,armin.grau@bundestag.de,timon.gremmels@bundestag.de,kerstin.griese@bundestag.de,hermann.groehe@bundestag.de,uli.groetsch@bundestag.de,michael.grosse-broemer@bundestag.de,markus.gruebel@bundestag.de,monika.gruetters@bundestag.de,sabine.gruetzmacher@bundestag.de,manfred.grund@bundestag.de,erhard.grundl@bundestag.de,oliver.grundmann@bundestag.de,serap.gueler@bundestag.de,fritz.guentzler@bundestag.de,ates.guerpinar@bundestag.de",
+
+    // Chunk 5 (email-05)
+    "olav.gutting@bundestag.de,gregor.gysi@bundestag.de,christian.haase@bundestag.de,robert.habeck@bundestag.de,thomas.hacker@bundestag.de,bettina.hagedorn@bundestag.de,rita.hagl-kehl@bundestag.de,andre.hahn@bundestag.de,florian.hahn@bundestag.de,metin.hakverdi@bundestag.de,reginald.hanke@bundestag.de,mariana.harder-kuehnel@bundestag.de,juergen.hardt@bundestag.de,philipp.hartewig@bundestag.de,sebastian.hartmann@bundestag.de,ulrike.harzer@bundestag.de,britta.hasselmann@bundestag.de,matthias.hauer@bundestag.de,jochen.haug@bundestag.de,stefan.heck@bundestag.de,dirk.heidenblut@bundestag.de,peter.heidt@bundestag.de,hubertus.heil@bundestag.de,mechthild.heil@bundestag.de,frauke.heiligenstadt@bundestag.de,thomas.heilmann@bundestag.de,gabriela.heinrich@bundestag.de,linda.heitmann@bundestag.de,matthias.helferich@bundestag.de,mark.helfrich@bundestag.de,katrin.helling-plahr@bundestag.de,wolfgang.hellmich@bundestag.de,kathrin.henneberger@bundestag.de,anke.hennig@bundestag.de,susanne.hennig-wellsow@bundestag.de,michael.hennrich@bundestag.de,marc.henrichmann@bundestag.de,markus.herbrand@bundestag.de,torsten.herbst@bundestag.de,bernhard.herrmann@bundestag.de,nadine.heselhaus@bundestag.de,martin.hess@bundestag.de,katja.hessel@bundestag.de,ansgar.heveling@bundestag.de,susanne.hierl@bundestag.de,karsten.hilse@bundestag.de,christian.hirte@bundestag.de,thomas.hitschler@bundestag.de,gero.hocker@bundestag.de",
+
+    // Chunk 6 (email-06)
+    "nicole.hoechst@bundestag.de,manuel.hoeferlin@bundestag.de,bruno.hoenel@bundestag.de,alexander.hoffmann@bundestag.de,bettina.hoffmann@bundestag.de,christoph.hoffmann@bundestag.de,anton.hofreiter@bundestag.de,leif-erik.holm@bundestag.de,hendrik.hoppenstedt@bundestag.de,franziska.hoppermann@bundestag.de,jasmina.hostert@bundestag.de,reinhard.houben@bundestag.de,johannes.huber@bundestag.de,verena.hubertz@bundestag.de,markus.huempfer@bundestag.de,hubert.hueppe@bundestag.de,andrej.hunko@bundestag.de,gerrit.huy@bundestag.de,olaf.inderbeek@bundestag.de,erich.irlstorfer@bundestag.de,fabian.jacobi@bundestag.de,dieter.janecek@bundestag.de,steffen.janich@bundestag.de,anne.janssen@bundestag.de,thomas.jarzombek@bundestag.de,gyde.jensen@bundestag.de,marc.jongen@bundestag.de,andreas.jung@bundestag.de,ingmar.jung@bundestag.de,frank.junge@bundestag.de,josip.juratovic@bundestag.de,ann-veruschka.jurisch@bundestag.de,oliver.kaczmarek@bundestag.de,lamya.kaddor@bundestag.de,elisabeth.kaiser@bundestag.de,kirsten.kappert-gonther@bundestag.de,macit.karaahmetoglu@bundestag.de,anja.karliczek@bundestag.de,carlos.kasper@bundestag.de,anna.kassautzki@bundestag.de,gabriele.katzmarek@bundestag.de,malte.kaufmann@bundestag.de,michael.kaufmann@bundestag.de,rainer.keller@bundestag.de,michael.kellner@bundestag.de,ronja.kemmer@bundestag.de,franziska.kersten@bundestag.de,katja.keul@bundestag.de,stefan.keuter@bundestag.de"
+
+    // 👉 Add Chunk 7 here, then Chunk 8, etc.
+  ];
+
+  // === helpers ===
+  function buildMailto(bccList) {
+    const subject = encodeURIComponent(SUBJECT);
+    const body = encodeURIComponent(BODY);
+    const bcc = encodeURIComponent(bccList); // keeps commas safe
+    return `mailto:?bcc=${bcc}&subject=${subject}&body=${body}`;
+  }
+
+  let current = 0;
+  const statusEl = document.getElementById("status");
+  const startBtn = document.getElementById("startBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  function updateStatus() {
+    statusEl.textContent = `Chunk ${current+1} von ${CHUNKS_BCC.length}`;
+  }
+
+  function openCurrentChunk() {
+    const mailto = buildMailto(CHUNKS_BCC[current]);
+    window.location.href = mailto;
+    updateStatus();
+  }
+
+  startBtn.addEventListener("click", () => {
+    current = 0;
+    nextBtn.disabled = false;
+    openCurrentChunk();
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if (current < CHUNKS_BCC.length - 1) {
+      current++;
+      openCurrentChunk();
+    } else {
+      statusEl.textContent = "Fertig – alle Chunks geöffnet.";
+      nextBtn.disabled = true;
+    }
+  });
+
+  // Manual buttons (always reliable)
+  const manual = document.getElementById("manualButtons");
+  CHUNKS_BCC.forEach((bcc, idx) => {
+    const a = document.createElement("a");
+    a.className = "btn";
+    a.style.margin = "8px 8px 0 0";
+    a.href = buildMailto(bcc);
+    a.textContent = `Chunk ${idx+1} öffnen`;
+    manual.appendChild(a);
+  });
+
+  statusEl.textContent = `bereit (${CHUNKS_BCC.length} Chunks geladen)`;
+</script>
+
 </body>
 </html>
