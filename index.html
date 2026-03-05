@@ -41,14 +41,14 @@
   <div class="card">
     <div class="row" style="justify-content:space-between">
       <div class="row">
-        <label id="chunkLabel" for="chunkSize">اندازه چانک:</label>
+        <label id="chunkLabel" for="chunkSize">اندازه لیست ایمیل ها:</label>
         <input id="chunkSize" type="number" min="1" step="1" value="60" />
         <div class="chips" aria-label="Schnellauswahl Chunk-Größe"></div>
       </div>
 
       <div class="row">
         <button id="sendBtn" disabled>✅ ارسال (باز کردن پیش‌نویس)</button>
-        <button id="nextBtn" class="secondary" disabled>➡️ چانک بعدی</button>
+        <button id="nextBtn" class="secondary" disabled>➡️ لیست ایمیل ها بعدی</button>
       </div>
     </div>
 
@@ -160,10 +160,10 @@ Text der Nachricht hier
 
   <div class="card">
     <details open>
-      <summary id="manualSummary">دکمه‌های دستی چانک‌ها (اگر «بعدی» کار نکرد)</summary>
+      <summary id="manualSummary">دکمه‌های دستی لیست ایمیل ها‌ها (اگر «بعدی» کار نکرد)</summary>
       <div id="manualButtons" class="row" style="margin-top:12px"></div>
       <p class="small" id="manualHelp" style="margin-top:10px">
-        اگر موبایل شما جریان دکمه «بعدی» را بلاک می‌کند، از این دکمه‌ها برای باز کردن هر چانک استفاده کنید.
+        اگر موبایل شما جریان دکمه «بعدی» را بلاک می‌کند، از این دکمه‌ها برای باز کردن هر لیست ایمیل ها استفاده کنید.
       </p>
     </details>
   </div>
@@ -181,10 +181,10 @@ const UI_TEXT = {
     langBtn: "🌐 EN",
     title: "📧 کمپین ایمیل",
     intro: `با یک کلیک، اپ ایمیل شما با متن آماده باز می‌شود.
-گیرندگان به‌صورت خودکار از emails.txt خوانده می‌شوند و به چند چانک تقسیم می‌شوند.`,
-    chunkLabel: "اندازه چانک:",
+گیرندگان به‌صورت خودکار از emails.txt خوانده می‌شوند و به چند لیست ایمیل ها تقسیم می‌شوند.`,
+    chunkLabel: "اندازه لیست ایمیل ها:",
     sendBtn: "✅ ارسال (باز کردن پیش‌نویس)",
-    nextBtn: "➡️ چانک بعدی",
+    nextBtn: "➡️ لیست ایمیل ها بعدی",
     statusLabel: "وضعیت:",
     warnTitle: "نکته مهم:",
     warnText: `مرورگرهای داخل اپ‌ها (Instagram/X/Telegram) اغلب mailto: را بلاک می‌کنند.
@@ -195,18 +195,18 @@ const UI_TEXT = {
     aboutDeTitle: "Deutsch",
     previewSummary: "نمایش موضوع و متن ایمیل (شفافیت)",
     previewSubjectLabel: "موضوع:",
-    manualSummary: "دکمه‌های دستی چانک‌ها (اگر «بعدی» کار نکرد)",
-    manualHelp: "اگر موبایل شما جریان دکمه «بعدی» را بلاک می‌کند، از این دکمه‌ها برای باز کردن هر چانک استفاده کنید.",
+    manualSummary: "دکمه‌های دستی لیست ایمیل ها‌ (اگر «بعدی» کار نکرد)",
+    manualHelp: "اگر موبایل شما جریان دکمه «بعدی» را بلاک می‌کند، از این دکمه‌ها برای باز کردن هر لیست ایمیل ها استفاده کنید.",
     reuseTitle: "استفاده مجدد در کشور شما",
     reuseFaTitle: "فارسی",
     reuseEnTitle: "English",
     reuseDeTitle: "Deutsch",
     loading: "در حال بارگذاری emails.txt و message.txt …",
     loadedFmt: (count, size, idx, total, nrec) =>
-      `بارگذاری شد: ${count} ایمیل • اندازه چانک ${size} • چانک ${idx}/${total} (${nrec} گیرنده)`,
+      `بارگذاری شد: ${count} ایمیل • اندازه لیست ایمیل ها ${size} • لیست ایمیل ها ${idx}/${total} (${nrec} گیرنده)`,
     noRecipients: "هیچ گیرنده‌ای بارگذاری نشد. فایل emails.txt را بررسی کنید.",
     empty: "(خالی)",
-    openChunk: (i) => `باز کردن چانک ${i}`,
+    openChunk: (i) => `باز کردن لیست ایمیل ها ${i}`,
     errorPrefix: "خطا: "
   },
 
