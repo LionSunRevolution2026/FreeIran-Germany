@@ -99,138 +99,95 @@
   </div>
 
 <script>
-  // ========= EDIT ONCE =========
-  const SUBJECT = "Freiheit und Demokratie für Iran";
 
-  const BODY = `Sehr geehrte Damen und Herren Abgeordnete,
-sehr geehrte Entscheidungsträger,
+let SUBJECT="";
+let BODY="";
 
-als in Deutschland ansässige Bürger iranischer Herkunft wenden wir uns mit einem dringlichen politischen Anliegen an Sie. Angesichts der anhaltenden Bestrebungen des iranischen Volkes nach Freiheit und Rechtsstaatlichkeit fordern wir eine konsequente und unverminderte Unterstützung dieses historischen Transformationsprozesses bis zum vollständigen Sturz der Islamischen Republik.
+let emails=[];
+let chunks=[];
+let current=0;
 
-In diesem Zusammenhang unterstreichen wir die absolute Unantastbarkeit der territorialen Integrität Irans. Jede zukünftige staatliche Ordnung muss zwingend auf dem souveränen Willen des iranischen Volkes basieren und völkerrechtlichen Standards entsprechen.
+const statusEl=document.getElementById("status");
+const sendBtn=document.getElementById("sendBtn");
+const nextBtn=document.getElementById("nextBtn");
+const chunkSizeEl=document.getElementById("chunkSize");
 
-Um eine stabile Transition zu gewährleisten und ein Machtvakuum zu verhindern, unterstützen wir die Federführung einer Übergangsverwaltung unter Kronprinz Reza Pahlavi. Er wird von weiten Teilen der iranischen Gesellschaft als legitime und einende Schlüsselfigur anerkannt, um das Land in eine freie und demokratische Zukunft zu führen.
+function normalizeEmails(lines){
+  return lines.map(e=>e.trim()).filter(e=>e.length>0);
+}
 
-Wir appellieren an Sie, im Rahmen Ihres Mandats sicherzustellen, dass die Bundesrepublik Deutschland eine klare geopolitische Haltung einnimmt. Dies schließt den maximalen Schutz der Zivilbevölkerung sowie die konsequente Isolierung des aktuellen Regimes ein.
-
-Freiheit und universelle Menschenrechte sind keine bloßen regionalen Konzepte, sondern bilden das Fundament der westlichen Wertegemeinschaft. Wir erwarten daher von der deutschen Politik ein proaktives Engagement, das der historischen Tragweite dieser Freiheitsbewegung gerecht wird.
-
-Mit vorzüglicher Hochachtung`;
-  // ============================
-
-  const statusEl = document.getElementById("status");
-  const sendBtn = document.getElementById("sendBtn");
-  const nextBtn = document.getElementById("nextBtn");
-  const chunkSizeEl = document.getElementById("chunkSize");
-  const manual = document.getElementById("manualButtons");
-
-  document.getElementById("previewSubject").textContent = SUBJECT;
-  document.getElementById("previewBody").textContent = BODY;
-
-  let emails = [];
-  let chunks = [];
-  let current = 0;
-
-  function normalizeEmails(lines) {
-    return lines
-      .map(l => l.trim())
-      .filter(Boolean)
-      .filter(l => !l.startsWith("#"))
-      .map(l => l.replace(/,$/,""));
+function chunkArray(arr,size){
+  const out=[];
+  for(let i=0;i<arr.length;i+=size){
+    out.push(arr.slice(i,i+size));
   }
+  return out;
+}
 
-  function chunkArray(arr, size) {
-    const out = [];
-    for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
-    return out;
+function buildMailto(bccList){
+  const bcc=encodeURIComponent(bccList.join(","));
+  const subject=encodeURIComponent(SUBJECT);
+  const body=encodeURIComponent(BODY);
+  return `mailto:?bcc=${bcc}&subject=${subject}&body=${body}`;
+}
+
+function updateUI(){
+
+  const size=parseInt(chunkSizeEl.value||60);
+
+  chunks=chunkArray(emails,size);
+
+  sendBtn.disabled=false;
+
+  statusEl.textContent=
+  `Loaded ${emails.length} emails • ${chunks.length} chunks`;
+
+}
+
+function openCurrent(){
+  if(!chunks.length) return;
+  window.location.href=buildMailto(chunks[current]);
+}
+
+sendBtn.onclick=openCurrent;
+
+nextBtn.onclick=function(){
+  if(current<chunks.length-1){
+    current++;
+    openCurrent();
   }
+}
 
-  function buildMailto(bccEmails) {
-    // Use BCC to avoid exposing recipient list to everyone
-    const bcc = encodeURIComponent(bccEmails.join(","));
-    const subject = encodeURIComponent(SUBJECT);
-    const body = encodeURIComponent(BODY);
-    return `mailto:?bcc=${bcc}&subject=${subject}&body=${body}`;
-  }
+async function loadEmails(){
+  const res=await fetch("emails.txt");
+  const txt=await res.text();
+  emails=normalizeEmails(txt.split("\n"));
+}
 
-  function updateUI() {
-    const size = Math.max(1, parseInt(chunkSizeEl.value || "60", 10));
-    chunks = chunkArray(emails, size);
-    current = Math.min(current, Math.max(0, chunks.length - 1));
+async function loadMessage(){
 
-    const hasChunks = chunks.length > 0;
-    sendBtn.disabled = !hasChunks;
-    nextBtn.disabled = !hasChunks || current >= chunks.length - 1;
+  const res=await fetch("message.txt");
+  const txt=await res.text();
 
-    if (!hasChunks) {
-      statusEl.textContent = "Keine Emails geladen. Prüfe emails.txt";
-      manual.innerHTML = "";
-      return;
-    }
+  const subjectMatch=txt.match(/SUBJECT:(.*)/);
+  const bodyMatch=txt.split("BODY:")[1];
 
-    statusEl.textContent =
-      `Loaded ${emails.length} emails • Chunk size ${size} • Chunk ${current + 1} / ${chunks.length} (${chunks[current].length} recipients)`;
+  SUBJECT=subjectMatch?subjectMatch[1].trim():"";
+  BODY=bodyMatch?bodyMatch.trim():"";
 
-    // rebuild manual buttons
-    manual.innerHTML = "";
-    chunks.forEach((chunk, idx) => {
-      const a = document.createElement("a");
-      a.className = "btn";
-      a.href = buildMailto(chunk);
-      a.textContent = `Open chunk ${idx + 1}`;
-      a.style.marginRight = "8px";
-      a.style.marginTop = "8px";
-      manual.appendChild(a);
-    });
-  }
+}
 
-  function openCurrent() {
-    if (!chunks.length) return;
-    window.location.href = buildMailto(chunks[current]);
-    updateUI();
-  }
+async function init(){
 
-  // chunk size quick buttons
-  document.querySelectorAll("[data-size]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      chunkSizeEl.value = btn.getAttribute("data-size");
-      current = 0;
-      updateUI();
-    });
-  });
+  await loadEmails();
+  await loadMessage();
 
-  chunkSizeEl.addEventListener("change", () => { current = 0; updateUI(); });
-  chunkSizeEl.addEventListener("input", () => { /* live typing ok */ });
+  updateUI();
 
-  sendBtn.addEventListener("click", () => openCurrent());
+}
 
-  nextBtn.addEventListener("click", () => {
-    if (current < chunks.length - 1) {
-      current++;
-      openCurrent();
-    }
-  });
+init();
 
-  // Load emails.txt
-  (async function init() {
-    try {
-      const res = await fetch("emails.txt", { cache: "no-store" });
-      if (!res.ok) throw new Error("Failed to fetch emails.txt");
-      const text = await res.text();
-      emails = normalizeEmails(text.split(/\r?\n/));
-
-      if (emails.length === 0) {
-        statusEl.textContent = "emails.txt loaded but empty.";
-        return;
-      }
-
-      statusEl.textContent = `Loaded ${emails.length} emails. Building chunks...`;
-      updateUI();
-    } catch (e) {
-      statusEl.textContent = "Could not load emails.txt. Make sure it is in the same folder as index.html.";
-      console.error(e);
-    }
-  })();
 </script>
 
 </body>
