@@ -37,8 +37,15 @@
     .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
     .titleRow{display:flex;align-items:center;gap:12px}
     .badgeIcon{
-      width:55px;height:55px;border-radius:10px;
-      display:inline-flex;align-items:center;justify-content:center;
+      width:48px;
+      height:48px;
+      font-size:28px;   /* makes emoji bigger */
+    
+      border-radius:12px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    
       background:rgba(255,255,255,.06);
       border:1px solid var(--border);
       box-shadow:0 10px 24px rgba(0,0,0,.35);
@@ -181,7 +188,7 @@
   
   <div class="topbar">
     <div class="titleRow">
-      <div class="badgeIcon">✉️</div>
+      <div class="badgeIcon">🕊️</div>
       <div>
         <h1 id="pageTitle"></h1>
         <div class="subtitle" id="pageSubtitle"></div>
