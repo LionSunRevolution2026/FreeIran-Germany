@@ -14,6 +14,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Email Campaign</title>
+
   <style>
     :root{
       --bg0:#07131c; --bg1:#071a26; --bg2:#061018;
@@ -27,15 +28,18 @@
       --grn:#6ee7a5;
       --oth:#a7b6ff;
 
-      --warn0: rgba(255,193,7,.10);
-      --warn1: rgba(255,193,7,.28);
+      --info0:rgba(111,207,151,.10);
+      --info1:rgba(111,207,151,.25);
+      --inputBg:rgba(255,255,255,.06);
     }
+
+    *{box-sizing:border-box}
 
     body{
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       max-width:980px;
       margin:34px auto;
-      padding:0 16px;
+      padding:0 16px 30px;
       line-height:1.6;
       color:var(--text);
       background:
@@ -44,8 +48,20 @@
         linear-gradient(180deg, var(--bg1), var(--bg0) 55%, var(--bg2));
     }
 
-    .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
-    .titleRow{display:flex;align-items:center;gap:12px}
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .titleRow{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
     .badgeIcon{
       width:55px;
       height:55px;
@@ -58,11 +74,14 @@
       border:1px solid var(--border);
       box-shadow:0 10px 24px rgba(0,0,0,.35);
     }
+
     h1{margin:0;font-size:32px;letter-spacing:.2px}
     .subtitle{margin:4px 0 0;color:var(--muted);white-space:pre-line}
 
     button, a.btn{
-      display:inline-flex;align-items:center;justify-content:center;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
       padding:12px 14px;
       border-radius:14px;
       border:1px solid rgba(255,255,255,.14);
@@ -74,11 +93,13 @@
       transition:transform .05s ease, background .2s ease;
       user-select:none;
     }
+
     button:active{transform:translateY(1px)}
     button:disabled{opacity:.5;cursor:not-allowed}
 
     .langBtn{
-      padding:10px 12px;border-radius:14px;
+      padding:10px 12px;
+      border-radius:14px;
       background:rgba(255,255,255,.04);
     }
 
@@ -95,9 +116,63 @@
         0 1px 0 rgba(255,255,255,.05) inset;
     }
 
-    .warn{
-      background:var(--warn0);
-      border:1px solid var(--warn1);
+    .emailTextCard pre{
+      margin:10px 0 0;
+      white-space:pre-wrap;
+      background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:14px;
+      padding:14px;
+      color:rgba(232,242,255,.94);
+      font-family:inherit;
+      line-height:1.7;
+    }
+
+    .signatureCard{
+      background:var(--info0);
+      border:1px solid var(--info1);
+    }
+
+    .signatureTitle{
+      margin:0 0 8px;
+      font-size:20px;
+    }
+
+    .signatureText{
+      color:var(--muted);
+      margin:0 0 12px;
+      white-space:pre-line;
+    }
+
+    .inputWrap{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .label{
+      font-weight:700;
+    }
+
+    .nameInput{
+      width:100%;
+      padding:14px 16px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:var(--inputBg);
+      color:var(--text);
+      font-size:16px;
+      outline:none;
+    }
+
+    .nameInput::placeholder{
+      color:rgba(232,242,255,.45);
+    }
+
+    .inputHint{
+      color:var(--muted);
+      font-size:.95rem;
+      margin:0;
     }
 
     .grid{
@@ -105,6 +180,7 @@
       grid-template-columns:1fr 1fr;
       gap:16px;
     }
+
     @media (max-width: 820px){
       .grid{grid-template-columns:1fr}
     }
@@ -118,21 +194,30 @@
       overflow:hidden;
       box-shadow:0 18px 44px rgba(0,0,0,.42);
     }
+
     .panel::before{
       content:"";
-      position:absolute;inset:-2px;
+      position:absolute;
+      inset:-2px;
       opacity:.22;
       background: radial-gradient(900px 320px at 0% 0%, var(--accent), transparent 55%);
       pointer-events:none;
     }
 
     .panelHeader{
-      display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
       position:relative;
     }
+
     .panelTitle{margin:0;font-size:22px;line-height:1.25}
+
     .pill{
-      display:inline-flex;align-items:center;gap:8px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
       padding:8px 12px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.16);
@@ -140,7 +225,15 @@
       font-weight:900;
       white-space:nowrap;
     }
-    .dot{width:10px;height:10px;border-radius:999px;background:var(--accent);box-shadow:0 0 0 3px rgba(255,255,255,.06)}
+
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background:var(--accent);
+      box-shadow:0 0 0 3px rgba(255,255,255,.06);
+    }
+
     .meta{
       margin:10px 0 12px;
       color:#fff;
@@ -172,11 +265,13 @@
 
     details{margin-top:10px}
     details summary{cursor:pointer;font-weight:900}
+
     .mono{
       font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
       unicode-bidi:plaintext;
       word-break:break-word;
     }
+
     pre.mono{
       white-space:pre-wrap;
       background:rgba(0,0,0,.22);
@@ -186,14 +281,15 @@
       margin:10px 0 0;
       color:rgba(232,242,255,.92);
     }
+
     .files{margin-top:10px;color:var(--muted);font-size:.95rem}
     .error{color:#ffb4b4}
 
-    .hint{
-      margin-top:10px;
-      color:var(--muted);
-      font-size:.95rem;
-      white-space:pre-line;
+    @media (max-width:700px){
+      .topbar{
+        flex-direction:column;
+        align-items:flex-start;
+      }
     }
   </style>
 </head>
@@ -211,15 +307,15 @@
     <button id="langBtn" class="langBtn" type="button"></button>
   </div>
 
-  <div class="card">
-    <h2 id="aboutTitle"></h2>
-    <p id="aboutText"></p>
-  </div>
+  <div class="card signatureCard">
+    <h2 class="signatureTitle" id="signatureTitle"></h2>
+    <p class="signatureText" id="signatureNote"></p>
 
-  <div class="card warn">
-    <b id="warnTitle"></b>
-    <span id="warnText" style="color:var(--muted)"></span>
-    <div class="hint" id="hostingHint"></div>
+    <div class="inputWrap">
+      <label class="label" id="nameLabel" for="fullName"></label>
+      <input id="fullName" class="nameInput" type="text" autocomplete="name" />
+      <p class="inputHint" id="nameHint"></p>
+    </div>
   </div>
 
   <div class="grid">
@@ -350,19 +446,27 @@
 
   </div>
 
+  <div class="card emailTextCard">
+    <h2 id="aboutTitle"></h2>
+    <pre id="aboutText"></pre>
+  </div>
+
 <script>
   let LANG = "fa";
+  let nameInputTracked = false;
 
   const UI = {
     fa: {
       dir:"rtl",
       title:"کمپین ایمیل آلمان",
-      subtitle:"این صفحه ۴ بخش دارد. هر بخش لیست گیرندگان و متن مخصوص خودش را دارد.\nبا یک کلیک، پیش‌نویس آماده در برنامه ایمیل شما باز می‌شود.\nنیازی نیست قسمت «to» را پر کنید؛ همه گیرندگان در «bcc» هستند و لطفاً در پایان ایمیل نام خود را امضا کنید.",
-      warnTitle:"نکته مهم:",
-      aboutTitle:"درباره",
-      aboutText:"این صفحه بخشی از یک ابتکار مدنی است که به شهروندان کمک می‌کند تا به‌سادگی با اعضای پارلمان آلمان (بوندستاگ) تماس بگیرند و توجه سیاسی بیشتری را به وضعیت ایران جلب کنند. هدف این اقدام اعلام حمایت از مبارزه مردم ایران برای آزادی، دموکراسی، حقوق بشر و حاکمیت قانون است. بسیاری از ایرانیان در داخل و خارج از کشور از شاهزاده رضا پهلوی به عنوان چهره‌ی اصلی حامی گذار دموکراتیک و مسالمت‌آمیز در ایران حمایت می‌کنند. با ارسال این ایمیل، شهروندان می‌توانند دولت‌های دموکراتیک را تشویق کنند تا صدای مردم ایران را بشنوند و از خواسته‌های آنان برای آینده‌ای آزاد و دموکراتیک حمایت کنند. این ابزار تنها یک پیش‌نویس ایمیل آماده می‌کند و تصمیم نهایی برای ارسال آن کاملاً بر عهده کاربر است.",
-      warnText:"مرورگرهای داخل اپ‌ها (Instagram/X/Telegram) اغلب mailto: را بلاک می‌کنند. اگر کار نکرد: لینک را در مرورگر اصلی (Safari/Chrome) باز کنید یا گزینه «Open in browser» را بزنید.",
-      hostingHint:"⚠️ این صفحه باید از GitHub Pages (نه داخل صفحهٔ فایل‌های GitHub) باز شود؛ وگرنه دکمه‌ها و فایل‌خوانی ممکن است کار نکند.\n\nنکته مهم: برای هر بخش، در مجموع تعداد ایمیل‌های همان بخش بارگذاری می‌شود اما در هر بار کلیک فقط ۴۰ گیرنده انتخاب می‌شوند تا احتمال شناسایی به‌عنوان اسپم کمتر شود. اگر چند بار تکرار کنید، در نهایت کل فهرست همان بخش پوشش داده می‌شود. لطفاً هنگام ارسال صفحه را رفرش نکنید و نبندید، چون در غیر این صورت ترتیب دسته‌ها از ابتدا شروع می‌شود.",
+      subtitle:"این صفحه ۴ بخش دارد. هر بخش لیست گیرندگان و متن مخصوص خودش را دارد.\nبا یک کلیک، پیش‌نویس آماده در برنامه ایمیل شما باز می‌شود.",
+      aboutTitle:"ترجمه متن ایمیل",
+      aboutText:`این صفحه شامل ۴ بخش است و هر بخش متن و فهرست گیرندگان جداگانه دارد. هر بار فقط ۴۰ گیرنده برای همان بخش انتخاب می‌شود تا احتمال شناسایی به‌عنوان اسپم کمتر شود. اگر این کار را چند بار تکرار کنید، در نهایت کل فهرست همان بخش پوشش داده می‌شود. لطفاً هنگام ارسال، صفحه را رفرش نکنید و نبندید؛ در غیر این صورت ترتیب دسته‌ها از ابتدا شروع می‌شود.`,
+      signatureTitle:"امضای شما",
+      signatureNote:"لطفاً نام خود را برای امضا وارد کنید تا به ایمیل ارزش و اعتبار بیشتری بدهد.\nما هیچ‌یک از این اطلاعات را در هیچ جایی ذخیره نمی‌کنیم، بنابراین نام شما محفوظ می‌ماند.\nدر صورت تمایل می‌توانید متن ایمیل را کمی تغییر دهید تا کاملاً تکراری نباشد.\nاگر برای کشورهای دیگر هم به این پلتفرم نیاز دارید، به ما اطلاع دهید.",
+      nameLabel:"نام کامل",
+      namePlaceholder:"نام خود را اینجا بنویسید",
+      nameHint:"این قسمت اختیاری است.",
       toggle:"🌐 EN",
 
       sectionTitles:{
@@ -371,32 +475,34 @@
         grn:"ارسال ایمیل به سبزها / ائتلاف ۹۰",
         oth:"ارسال ایمیل به سایرین"
       },
-      partyNames:{ cdu:"CDU/CSU", spd:"SPD", grn:"Greens / Alliance 90", oth:"Others" },
-      meta:(party, total, batch)=>`نکته مهم: ${total} ایمیل برای ${party} بارگذاری شده است. هر بار فقط ${batch} گیرنده انتخاب می‌شود.`,
-      sendBtn:"✅ ارسال ایمیل (باز کردن پیش‌نویس)",
+      partyNames:{ cdu:"CDU/CSU", spd:"SPD", grn:"Greens", oth:"Others" },
+      meta:(party,total,batch)=>`نکته مهم: ${total} ایمیل برای ${party} بارگذاری شده است. هر بار فقط ${batch} گیرنده انتخاب می‌شود.`,
+      sendBtn:"✅ ارسال ایمیل",
       statusLabel:"وضعیت:",
       loaded:(n)=>`بارگذاری شد: ${n} ایمیل`,
       bullets:[
         "پیش‌نویس ایمیل با گیرندگان آماده می‌شود.",
         "هر بار فقط ۴۰ گیرنده برای همان بخش انتخاب می‌شود.",
-        "ارسال نهایی با خود شماست (در اپ ایمیل)."
+        "ارسال نهایی با خود شماست."
       ],
       previewSummary:"نمایش موضوع و متن ایمیل",
       subjectLabel:"موضوع:",
-      files:(m, msg)=>`فایل‌ها: ${m} + ${msg}`,
+      files:(m,msg)=>`فایل‌ها: ${m} + ${msg}`,
       dash:"—",
       errorPrefix:"خطا: "
     },
 
     en: {
       dir:"ltr",
-      title:"Email Campaign",
-      subtitle:"This page has 4 sections. Each section has its own recipient list and message. One click opens a ready draft in your email app. You do not need to fill in the “To” field because all recipients are already included in the bcc field. Please do not forget to sign the end of the email with your name before sending it.",
-      warnTitle:"Note (important):",
-      aboutTitle:"About this project",
-      aboutText:"This page is part of a civic initiative that helps citizens easily contact members of the German Bundestag and raise greater political awareness about the situation in Iran. The goal of this initiative is to express support for the Iranian people's struggle for freedom, democracy, human rights, and the rule of law. Many Iranians inside and outside the country support Crown Prince Reza Pahlavi as the central figure advocating for a democratic and peaceful transition in Iran. By sending this email, citizens can encourage democratic governments to listen to the voices of the Iranian people and support their aspirations for a free and democratic future. This tool only prepares an email draft and the final decision to send the email remains entirely with the user.",
-      warnText:"In-app browsers (Instagram/X/Telegram) often block mailto:. If it doesn’t work: open the link in Safari/Chrome or choose “Open in browser”.",
-      hostingHint:"⚠️ Open this page via GitHub Pages (not the GitHub file viewer), otherwise the buttons / file loading may not work.\n\nImportant: for each section, the full email list for that party is loaded, but only 40 recipients are selected on each click to reduce the chance of being flagged as spam. If you repeat enough times, the full list for that section will eventually be covered. Please do not refresh or close the page while sending, otherwise the batch order will start again from the beginning.",
+      title:"Germany email campaign",
+      subtitle:"This page has 4 sections. Each section has its own recipient list and its own message.\nOne click opens a ready draft in your email app.",
+      aboutTitle:"Translation of the email text",
+      aboutText:`This page contains 4 sections, each with its own message and recipient list. Only 40 recipients are selected each time for that section to reduce the chance of being flagged as spam. If you repeat this enough times, the full list for that section will eventually be covered. Please do not refresh or close the page while sending, otherwise the batch order will start again from the beginning.`,
+      signatureTitle:"Your signature",
+      signatureNote:"Please write your name for the signature to give more value to the email.\nWe do not save any of this data or your name anywhere, so you will be safe.\nFeel free to slightly change the email so it is not fully repetitive.\nIf you need to use this platform for other countries as well, please let us know.",
+      nameLabel:"Full name",
+      namePlaceholder:"Write your name here",
+      nameHint:"This field is optional.",
       toggle:"🌐 DE",
 
       sectionTitles:{
@@ -405,40 +511,34 @@
         grn:"Send email to the Greens / Alliance 90",
         oth:"Send email to Others"
       },
-      partyNames:{ cdu:"CDU/CSU", spd:"SPD", grn:"Greens / Alliance 90", oth:"Others" },
-      meta:(party, total, batch)=>`Important: ${total} emails are loaded for ${party}. Only ${batch} recipients are selected each time.`,
-      sendBtn:"✅ Send email (open draft)",
+      partyNames:{ cdu:"CDU/CSU", spd:"SPD", grn:"Greens", oth:"Others" },
+      meta:(party,total,batch)=>`Important: ${total} emails are loaded for ${party}. Only ${batch} recipients are selected each time.`,
+      sendBtn:"✅ Send email",
       statusLabel:"Status:",
       loaded:(n)=>`Loaded: ${n} emails`,
       bullets:[
         "A draft email with recipients is prepared.",
         "Only 40 recipients are selected each time for that section.",
-        "Final sending is up to you (in your email app)."
+        "Final sending is up to you."
       ],
-      previewSummary:"Show subject & body",
+      previewSummary:"Show subject and body",
       subjectLabel:"Subject:",
-      files:(m, msg)=>`Files: ${m} + ${msg}`,
+      files:(m,msg)=>`Files: ${m} + ${msg}`,
       dash:"—",
       errorPrefix:"Error: "
     },
 
     de: {
       dir:"ltr",
-      title:"E-Mail-Aktion",
-      subtitle:"Diese Seite hat 4 Bereiche. Jeder Bereich hat seine eigene Empfängerliste und Nachricht. Ein Klick öffnet einen fertigen Entwurf in deiner Mail-App. Du musst das „To“-Feld nicht ausfüllen, da alle Empfänger bereits im bcc-Feld enthalten sind. Bitte vergiss nicht, die E-Mail am Ende mit deinem Namen zu unterschreiben, bevor du sie sendest.",
-      warnTitle:"Hinweis (wichtig):",
-      aboutTitle:"Über dieses Projekt",
-      aboutText:`Diese Seite ist Teil einer zivilgesellschaftlichen Initiative, die es Bürgerinnen und Bürgern ermöglicht, Mitglieder des Deutschen Bundestages einfach zu kontaktieren und politische Aufmerksamkeit für die Situation im Iran zu fördern.
-      
-Ziel ist es, Unterstützung für den Kampf des iranischen Volkes für Freiheit, Demokratie, Menschenrechte und Rechtsstaatlichkeit auszudrücken.
-
-Viele Iranerinnen und Iraner im In- und Ausland unterstützen Kronprinz Reza Pahlavi als eine wichtige Stimme für einen demokratischen und friedlichen Übergang im Iran.
-
-Durch das Versenden dieser E-Mail können Bürgerinnen und Bürger demokratische Regierungen dazu ermutigen, die Stimmen der iranischen Bevölkerung zu hören und ihre Bestrebungen nach einer freien und demokratischen Zukunft zu unterstützen.
-
-Dieses Werkzeug erstellt lediglich einen E-Mail-Entwurf — die endgültige Entscheidung zum Versenden liegt vollständig beim Nutzer.`,
-      warnText:"In-App-Browser (Instagram/X/Telegram) blockieren oft mailto:. Wenn es nicht klappt: Link im normalen Browser öffnen (Safari/Chrome) oder „In Browser öffnen“ wählen.",
-      hostingHint:"⚠️ Diese Seite muss über GitHub Pages (nicht im GitHub-Dateiviewer) geöffnet werden, sonst funktionieren Buttons/Dateien evtl. nicht.\n\nWichtiger Hinweis: Für jeden Bereich wird die vollständige E-Mail-Liste dieser Gruppe geladen, aber bei jedem Klick werden nur 40 Empfänger ausgewählt, um das Risiko einer Spam-Markierung zu verringern. Wenn du das oft genug wiederholst, wird schließlich die gesamte Liste dieses Bereichs abgedeckt. Bitte aktualisiere oder schließe die Seite während des Sendens nicht, sonst beginnt die Reihenfolge der Gruppen wieder von vorne.",
+      title:"E-Mail-Kampagne Deutschland",
+      subtitle:"Diese Seite hat 4 Bereiche. Jeder Bereich hat seine eigene Empfängerliste und seine eigene Nachricht.\nEin Klick öffnet einen fertigen Entwurf in deiner Mail-App.",
+      aboutTitle:"Übersetzung des E-Mail-Textes",
+      aboutText:`Diese Seite enthält 4 Bereiche, jeweils mit eigener Nachricht und eigener Empfängerliste. Pro Klick werden für diesen Bereich nur 40 Empfänger ausgewählt, damit die Wahrscheinlichkeit einer Spam-Markierung geringer bleibt. Wenn du das oft genug wiederholst, wird die gesamte Liste dieses Bereichs schließlich abgedeckt. Bitte aktualisiere oder schließe die Seite während des Sendens nicht, sonst beginnt die Reihenfolge der Gruppen wieder von vorne.`,
+      signatureTitle:"Deine Unterschrift",
+      signatureNote:"Bitte schreibe deinen Namen für die Unterschrift, damit die E-Mail mehr Wert und Glaubwürdigkeit bekommt.\nWir speichern diese Daten oder deinen Namen nirgends, daher bist du sicher.\nDu kannst den E-Mail-Text gern leicht ändern, damit er nicht völlig identisch ist.\nWenn du diese Plattform auch für andere Länder brauchst, lass es uns wissen.",
+      nameLabel:"Vollständiger Name",
+      namePlaceholder:"Schreibe hier deinen Namen",
+      nameHint:"Dieses Feld ist optional.",
       toggle:"🌐 FA",
 
       sectionTitles:{
@@ -447,22 +547,29 @@ Dieses Werkzeug erstellt lediglich einen E-Mail-Entwurf — die endgültige Ents
         grn:"E-Mail an Bündnis 90/Die Grünen senden",
         oth:"E-Mail an Andere senden"
       },
-      partyNames:{ cdu:"CDU/CSU", spd:"SPD", grn:"Greens / Alliance 90", oth:"Others" },
-      meta:(party, total, batch)=>`Wichtiger Hinweis: ${total} E-Mails für ${party} wurden geladen. Pro Klick werden nur ${batch} Empfänger ausgewählt.`,
-      sendBtn:"✅ E-Mail senden (Entwurf öffnen)",
+      partyNames:{ cdu:"CDU/CSU", spd:"SPD", grn:"Greens", oth:"Others" },
+      meta:(party,total,batch)=>`Wichtiger Hinweis: ${total} E-Mails für ${party} wurden geladen. Pro Klick werden nur ${batch} Empfänger ausgewählt.`,
+      sendBtn:"✅ E-Mail senden",
       statusLabel:"Status:",
       loaded:(n)=>`Geladen: ${n} E-Mails`,
       bullets:[
         "Ein Entwurf mit Empfängern wird vorbereitet.",
         "Pro Klick werden nur 40 Empfänger für diesen Bereich ausgewählt.",
-        "Das endgültige Senden machst du in deiner Mail-App."
+        "Das endgültige Senden machst du selbst."
       ],
-      previewSummary:"Betreff & Text anzeigen",
+      previewSummary:"Betreff und Text anzeigen",
       subjectLabel:"Betreff:",
-      files:(m, msg)=>`Dateien: ${m} + ${msg}`,
+      files:(m,msg)=>`Dateien: ${m} + ${msg}`,
       dash:"—",
       errorPrefix:"Fehler: "
     }
+  };
+
+  const PANELS = {
+    cdu: { mailFile:"mail1.txt", msgFile:"message1.txt", emails:[], shuffledEmails:[], batchSize:40, batchIndex:0, subject:"", body:"", loaded:false, error:"" },
+    spd: { mailFile:"mail2.txt", msgFile:"message2.txt", emails:[], shuffledEmails:[], batchSize:40, batchIndex:0, subject:"", body:"", loaded:false, error:"" },
+    grn: { mailFile:"mail3.txt", msgFile:"message3.txt", emails:[], shuffledEmails:[], batchSize:40, batchIndex:0, subject:"", body:"", loaded:false, error:"" },
+    oth: { mailFile:"mail4.txt", msgFile:"message4.txt", emails:[], shuffledEmails:[], batchSize:40, batchIndex:0, subject:"", body:"", loaded:false, error:"" }
   };
 
   function setLang(lang){
@@ -475,25 +582,20 @@ Dieses Werkzeug erstellt lediglich einen E-Mail-Entwurf — die endgültige Ents
 
     document.getElementById("pageTitle").textContent = t.title;
     document.getElementById("pageSubtitle").textContent = t.subtitle;
-    document.getElementById("warnTitle").textContent = t.warnTitle + " ";
-    document.getElementById("warnText").textContent = t.warnText;
-    document.getElementById("hostingHint").textContent = t.hostingHint;
-    document.getElementById("langBtn").textContent = t.toggle;
     document.getElementById("aboutTitle").textContent = t.aboutTitle;
     document.getElementById("aboutText").textContent = t.aboutText;
+    document.getElementById("signatureTitle").textContent = t.signatureTitle;
+    document.getElementById("signatureNote").textContent = t.signatureNote;
+    document.getElementById("nameLabel").textContent = t.nameLabel;
+    document.getElementById("fullName").placeholder = t.namePlaceholder;
+    document.getElementById("nameHint").textContent = t.nameHint;
+    document.getElementById("langBtn").textContent = t.toggle;
 
-    const map = [
-      ["cdu", 1],
-      ["spd", 2],
-      ["grn", 3],
-      ["oth", 4]
-    ];
-
-    for(const [key, n] of map){
+    const map = ["cdu","spd","grn","oth"];
+    for(const key of map){
       const p = PANELS[key];
-      const party = t.partyNames[key];
       document.getElementById(`title-${key}`).textContent = t.sectionTitles[key];
-      document.getElementById(`meta-${key}`).textContent = t.meta(party, p.emails.length || 0, p.batchSize);
+      document.getElementById(`meta-${key}`).textContent = t.meta(t.partyNames[key], p.emails.length || 0, p.batchSize);
       document.getElementById(`send-${key}`).textContent = t.sendBtn;
       document.getElementById(`statusLabel-${key}`).textContent = t.statusLabel + " ";
       document.getElementById(`previewSummary-${key}`).textContent = t.previewSummary;
@@ -508,12 +610,9 @@ Dieses Werkzeug erstellt lediglich einen E-Mail-Entwurf — die endgültige Ents
     setLang(next);
   });
 
-  const PANELS = {
-    cdu: { mailFile:"mail1.txt", msgFile:"message1.txt", emails:[], shuffledEmails:[], batchSize:40, batchIndex:0, subject:"", body:"", loaded:false, error:"" },
-    spd: { mailFile:"mail2.txt", msgFile:"message2.txt", emails:[], shuffledEmails:[], batchSize:40, batchIndex:0, subject:"", body:"", loaded:false, error:"" },
-    grn: { mailFile:"mail3.txt", msgFile:"message3.txt", emails:[], shuffledEmails:[], batchSize:40, batchIndex:0, subject:"", body:"", loaded:false, error:"" },
-    oth: { mailFile:"mail4.txt", msgFile:"message4.txt", emails:[], shuffledEmails:[], batchSize:40, batchIndex:0, subject:"", body:"", loaded:false, error:"" }
-  };
+  document.getElementById("fullName").addEventListener("input", () => {
+    renderAllPanels();
+  });
 
   function normalizeEmails(text){
     return text
@@ -526,10 +625,15 @@ Dieses Werkzeug erstellt lediglich einen E-Mail-Entwurf — die endgültige Ents
   function parseMessage(text){
     const subjectLine = text.match(/^SUBJECT:\s*(.*)$/m);
     const bodySplit = text.split(/^\s*BODY:\s*$/m);
-
     const subject = subjectLine ? subjectLine[1].trim() : "";
     const body = (bodySplit.length > 1) ? bodySplit.slice(1).join("\n").trim() : "";
     return {subject, body};
+  }
+
+  function getSignedBody(body){
+    const name = document.getElementById("fullName").value.trim();
+    if(!name) return body || "";
+    return `${body || ""}\n\n${name}`;
   }
 
   function buildMailto(emails, subject, body){
@@ -571,6 +675,7 @@ Dieses Werkzeug erstellt lediglich einen E-Mail-Entwurf — die endgültige Ents
   function renderPanel(key){
     const t = UI[LANG];
     const p = PANELS[key];
+    const finalBody = getSignedBody(p.body);
 
     const statusEl = document.getElementById(`status-${key}`);
     if(statusEl){
@@ -591,7 +696,7 @@ Dieses Werkzeug erstellt lediglich einen E-Mail-Entwurf — die endgültige Ents
     const subjEl = document.getElementById(`previewSubject-${key}`);
     const bodyEl = document.getElementById(`previewBody-${key}`);
     if(subjEl) subjEl.textContent = p.subject || t.dash;
-    if(bodyEl) bodyEl.textContent = p.body || t.dash;
+    if(bodyEl) bodyEl.textContent = finalBody || t.dash;
 
     const filesEl = document.getElementById(`files-${key}`);
     if(filesEl) filesEl.textContent = t.files(p.mailFile, p.msgFile);
@@ -635,8 +740,8 @@ Dieses Werkzeug erstellt lediglich einen E-Mail-Entwurf — die endgültige Ents
       const parsed = parseMessage(msgTxt);
       p.subject = parsed.subject;
       p.body = parsed.body;
-
       p.loaded = true;
+
       renderPanel(key);
     }catch(e){
       p.loaded = false;
@@ -659,7 +764,8 @@ Dieses Werkzeug erstellt lediglich einen E-Mail-Entwurf — die endgültige Ents
       const batchEmails = getNextBatchEmails(key);
       if(!batchEmails.length) return;
 
-      window.location.href = buildMailto(batchEmails, p.subject, p.body);
+      const finalBody = getSignedBody(p.body);
+      window.location.href = buildMailto(batchEmails, p.subject, finalBody);
     });
   }
 
